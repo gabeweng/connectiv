@@ -1,5 +1,9 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import base64
+
+st.set_page_config(layout="wide")
 
 st.title("Connectiv")
 st.subheader("A Marketplace to find teammates for competitions")
