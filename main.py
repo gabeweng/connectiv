@@ -1,24 +1,36 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
-import base64
+import folium
 
-st.set_page_config(layout="wide")
+# Create a map
+map = folium.Map(location=[40.7128, -74.0059], zoom_start=12)
 
-st.title("Connectiv")
-st.subheader("A Marketplace to find teammates for competitions")
+# Add a marker to the map
+marker = folium.Marker([40.7128, -74.0059], popup="This is a marker!")
+map.add_child(marker)
 
-col1, col2, col3 = st.columns(3)
+# Add a clickable area to the map
+clickable_area = folium.GeoJson(
+    data={
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[[-74.009, 40.713], [-74.009, 40.710], [-74.005, 40.710], [-74.005, 40.713], [-74.009, 40.713]]]
+                },
+                "properties": {"popup": "This is a clickable area!"},
+            }
+        ],
+    }
+)
+map.add_child(clickable_area)
 
-with col1:
-   st.header("Darren Weng")
-   st.image("https://static.streamlit.io/examples/cat.jpg")
+# Add a callback to the clickable area
+def on_click(event):
+    st.write(f"You clicked on the clickable area at {event.coordinate}")
 
-with col2:
-   st.header("Gabe Weng")
-   st.text("Gabe is so cool")
-   st.image("https://static.streamlit.io/examples/dog.jpg")
+clickable_area.add_event_listener("click", on_click)
 
-with col3:
-   st.header("Julian Weng")
-   st.image("https://static.streamlit.io/examples/owl.jpg")
+# Display the map in Streamlit
+st.map(map)
